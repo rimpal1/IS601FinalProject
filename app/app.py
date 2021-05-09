@@ -1,6 +1,7 @@
 import simplejson as json
-from flask import Flask, request, Response, redirect
+from flask import Flask, request, Response, redirect, flash
 from flask import render_template, url_for, session
+from flask_wtf import form
 from flaskext.mysql import MySQL
 from random import randint
 from pymysql.cursors import DictCursor
@@ -31,7 +32,7 @@ name = ''
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    msg = ''
+    mess = ''
     print('log in request!')
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
@@ -47,12 +48,10 @@ def login():
         #   session['loggedin'] = True
         if check_password_hash(result, password):
             return redirect("/email", code=302)
-            # return render_template ( 'verify.html' )
-            # return redirect ( "/verify", code=302)
-            # return render_template ( 'index.html', msg=msg )
+
         else:
-            msg = 'Incorrect username / password !'
-    return render_template('login.html', msg=msg)
+            mess='Incorrect username / password !'
+    return render_template('login.html',msg=mess)
 
 
 @app.route('/email')
