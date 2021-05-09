@@ -1,0 +1,7 @@
+Flask
+mysql-connector
+simplejson
+flask-mysql
+sendgrid
+flask_mail
+pymysql
