@@ -140,12 +140,12 @@ def form_edit_get(id):
 def form_update_post(id):
     cursor = mysql.get_db().cursor()
     inputData = (request.form.get('pname'), request.form.get('psex'), request.form.get('age'),
-                 request.form.get('height'), request.form.get('weight'), id)
+                 request.form.get('height'), request.form.get('weight'),request.form.get('state'), id)
     sql_update_query = """UPDATE bioData t SET t.PatientName = %s, t.PatientSex = %s, t.Age = %s, t.Height =
-    %s, t.Weight = %s WHERE id = %s """
+    %s, t.Weight = %s, t.State = %s WHERE id = %s """
     cursor.execute(sql_update_query, inputData)
     mysql.get_db().commit()
-    return redirect("/", code=302)
+    return redirect("/index", code=302)
 
 
 @app.route('/patients/new', methods=['GET'])
@@ -157,14 +157,14 @@ def form_insert_get():
 def form_insert_post():
     cursor = mysql.get_db().cursor()
     inputData = (request.form.get('pname'), request.form.get('psex'), request.form.get('age'),
-                 request.form.get('height'), request.form.get('weight'))
+                 request.form.get('height'), request.form.get('weight'), request.form.get('state'))
     app.logger.info('testing info log')
     app.logger.info(inputData)
-    sql_insert_query = """INSERT INTO bioData (PatientName, PatientSex, Age, Height, Weight)
-    VALUES (%s, %s,%s, %s,%s) """
+    sql_insert_query = """INSERT INTO bioData (PatientName, PatientSex, Age, Height, Weight, State )
+    VALUES (%s, %s,%s, %s,%s, %s) """
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
-    return redirect("/", code=302)
+    return redirect("/index", code=302)
 
 
 @app.route('/delete/<int:id>', methods=['POST'])
@@ -173,7 +173,7 @@ def form_delete_post(id):
     sql_delete_query = """DELETE FROM bioData WHERE id = %s """
     cursor.execute(sql_delete_query, id)
     mysql.get_db().commit()
-    return redirect("/", code=302)
+    return redirect("/index", code=302)
 
 
 @app.route('/api/v1/patients', methods=['GET'])
@@ -202,8 +202,9 @@ def api_add() -> str:
 
     cursor = mysql.get_db().cursor()
     inputData = (content['PatientName'], content['PatientSex'], content['Age'],
-                 content['Height'], content['Weight'])
-    sql_insert_query = """INSERT INTO bioData (PatientName, PatientSex, Age, Height, Weight) VALUES (%s, %s,%s, %s,%s) """
+                 content['Height'], content['Weight'], content['State'])
+    sql_insert_query = """INSERT INTO bioData (PatientName, PatientSex, Age, Height, Weight, State) 
+    VALUES (%s, %s,%s, %s,%s,%s) """
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
     resp = Response(status=201, mimetype='application/json')
@@ -215,9 +216,9 @@ def api_edit(id) -> str:
     cursor = mysql.get_db().cursor()
     content = request.json
     inputData = (content['PatientName'], content['PatientSex'], content['Age'],
-                 content['Height'], content['Weight'], id)
+                 content['Height'], content['Weight'], content['State'], id)
     sql_update_query = """UPDATE bioData t SET t.PatientName = %s, t.PatientSex = %s, t.Age = %s, t.Height =
-    %s, t.Weight = %s WHERE id = %s """
+    %s, t.Weight = %s, t.State = %s WHERE id = %s """
     cursor.execute(sql_update_query, inputData)
     mysql.get_db().commit()
     resp = Response(status=200, mimetype='application/json')
@@ -237,4 +238,4 @@ def api_delete(id) -> str:
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=5000)
