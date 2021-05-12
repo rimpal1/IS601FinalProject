@@ -1,1 +1,218 @@
-<p>please edit it</p>
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Biographic data</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-1">
+    <a class="navbar-brand" href="#">Biographic Data
+        <title>Welcome!</title>
+    </a>
+    <button aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"
+            class="navbar-toggler" data-target="#navbarNavDropdown" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/patientList">View Patients <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="btn btn-success pl-2 lr-2 ml-3" href="/patients/new">Add New Patient<span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="row my-3">
+        <div class="col">
+            <h4>Dashboard</h4>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-md-12 py-1">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="chLine"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row py-2">
+        <div class="col-md-6 py-1">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="chDonut1"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 py-1">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="chBar"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    fetch("http://0.0.0.0:5000/api/v1/patients")
+        .then(response => response.json())
+        .then(json => {
+            const patientData = json
+            console.log(json)
+
+            let nameList = patientData.map(patient => {
+                return patient.PatientName
+            });
+            let ageList = patientData.map(patient => {
+                return patient.Age
+            });
+            let weightBMIList = patientData.map(patient => {
+                return ((patient.Weight) / (patient.Height * patient.Height)) * 703
+            });
+
+            var chLine = document.getElementById("chLine");
+            var chartData = {
+                labels: nameList,
+                datasets: [{
+                    label: '',
+                    data: ageList,
+                    backgroundColor: 'transparent',
+                    borderColor: "#007bff",
+                    borderWidth: 4,
+                    pointBackgroundColor: "#007bff"
+                }]
+            };
+            if (chLine) {
+                new Chart(chLine, {
+                    type: 'line',
+                    data: chartData,
+                    options: {
+                        tension: 0.4,
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    beginAtZero: false
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: true
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Name vs Age'
+                            }
+                        },
+                        responsive: true
+                    }
+                });
+            }
+
+            let states = patientData.map(patient => {
+                return patient.State
+            });
+            let result = states.reduce((a, c) => (a[c] = (a[c] || 0) + 1, a), Object.create(null));
+
+            var donutOptions = {
+                cutoutPercentage: 30,
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Aggregated by States'
+                    }
+                },
+                legend: {position: 'bottom', padding: 5, labels: {pointStyle: 'circle', usePointStyle: true}}
+            };
+
+            let colorList = []
+            for (let i = 0; i < Object.keys(result).length; i++) {
+                colorList.push("#000000".replace(/0/g, function () {
+                    return (~~(Math.random() * 16)).toString(16);
+                }));
+            }
+
+            var chDonutData1 = {
+                labels: Object.keys(result),
+                datasets: [
+                    {
+                        label: '',
+                        backgroundColor: colorList,
+                        borderWidth: 0,
+                        data: Object.values(result)
+                    }
+                ]
+            };
+
+            var chDonut1 = document.getElementById("chDonut1");
+            if (chDonut1) {
+                new Chart(chDonut1, {
+                    type: 'pie',
+                    data: chDonutData1,
+                    options: donutOptions
+                });
+            }
+
+            var chBar = document.getElementById("chBar");
+            if (chBar) {
+                new Chart(chBar, {
+                    type: 'bar',
+                    data: {
+                        labels: nameList,
+                        datasets: [{
+                            data: weightBMIList,
+                            backgroundColor: colorList
+                        }]
+                    },
+                    options: {
+                        legend: {
+                            display: true
+                        },
+                        scales: {
+                            xAxes: [{
+                                barPercentage: 0.4,
+                                categoryPercentage: 0.5
+                            }]
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Name vs BMI'
+                            }
+                        },
+                        responsive: true
+                    }
+                });
+            }
+
+        });
+</script>
+<div id="footer">
+    <script crossorigin="anonymous"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>

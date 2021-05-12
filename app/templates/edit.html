@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+<form action="/edit/{{patient.id}}" method="post">
+<div class="row">
+    <div class="col">
+        <label for="pname">Patient Name</label>
+        <input class="form-control" id="pname" name="pname" type="text"
+               value="{{patient.PatientName}}">
+    </div>
+
+     <div class="col">
+        <label for="age">Patient Age</label>
+        <input class="form-control" id="age" name="age" type="text"
+               value="{{patient.Age}}">
+    </div>
+    <div class="col">
+            <label for="psex">Patient Sex</label>
+            <input class="form-control" id="psex" name="psex" type="text"
+                   value="{{patient.PatientSex}}">
+        </div>
+</div>
+
+    <div class="row">
+
+        <div class="col">
+            <label for="height">Patient Height(inches)</label>
+            <input class="form-control" id="height" name="height" type="text"
+                   value="{{patient.Height}}">
+        </div>
+
+        <div class="col">
+            <label for="weight">Patient Weight(lbs)</label>
+            <input class="form-control" id="weight" name="weight"
+                   type="text" value="{{patient.Weight}}">
+        </div>
+        <div class="col">
+            <label for="state">State you reside</label>
+            <input class="form-control" id="state" name="state" type="text"
+                   value="{{patient.State}}">
+        </div>
+    </div>
+    <br>
+    <button class="btn btn-success" onclick="onUpdate()" type="submit">Save</button>
+
+
+</form>
+{% endblock %}

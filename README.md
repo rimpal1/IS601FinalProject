@@ -5,4 +5,17 @@ Integrates Chart.js's graphs with Login and Registration process to show Graphs 
 ## Team
 - **Yan Yan**: Create a login and registration process that includes email verification.  
 - **Rimpalbahen Suthar**: Create API endpoints and then consume those endpoints using a JavaScript chart. 
-## Installation Struction
+
+## Installation Instruction
+
+please run "docker-compose up" command.
+
+
+### Biographic Chart 
+
+1. The dashboard page is at "http://0.0.0.0:5000/index"
+2. The user will be able to add, update and delete the records.
+3. The chart will get updated with respect to the data modified.
+
+![Dashboard](/Screenshots/Dashboard.png)
+
