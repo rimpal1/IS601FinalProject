@@ -17,12 +17,12 @@ app.config['MYSQL_DATABASE_PORT'] = 3306
 app.config['MYSQL_DATABASE_DB'] = 'LoginData'
 mysql.init_app(app)
 
-app.config["MAIL_SERVER"]='smtp.gmail.com'
-app.config["MAIL_PORT"]=587
-app.config["MAIL_USERNAME"]='yyan80@gmail.com'
-app.config['MAIL_PASSWORD']='80762525'
-app.config['MAIL_USE_TLS']=True
-app.config['MAIL_USE_SSL']=False
+app.config["MAIL_SERVER"] = 'smtp.gmail.com'
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USERNAME"] = 'yyan80@gmail.com'
+app.config['MAIL_PASSWORD'] = 'yanyan8076'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 mail = Mail(app)
 otp = randint(000000, 999999)
 name = ''
@@ -41,7 +41,7 @@ def login():
         cursor = mysql.get_db().cursor()
         sql_query = ('SELECT * FROM accounts WHERE username = %s')
         accounts = (username,)
-        cursor.execute (sql_query, accounts)
+        cursor.execute(sql_query, accounts)
         result = cursor.fetchone()['password']
         # if username:
         #   session['loggedin'] = True
@@ -49,7 +49,7 @@ def login():
             return redirect("/email", code=302)
 
         else:
-            mess='Incorrect username / password !'
+            mess = 'Incorrect username / password !'
     return render_template('login.html', msg=mess)
 
 
@@ -58,18 +58,18 @@ def email():
     return render_template('login2.html')
 
 
-@app.route('/verify',methods=['POST'])
+@app.route('/verify', methods=['POST'])
 def verify():
     email = request.form['email']
-    msg=Message( subject='OTP', sender='yyan80@gmail.com', recipients= [email] )
+    msg = Message(subject='OTP', sender='yyan80@gmail.com', recipients=[email])
     msg.body = str(otp)
     mail.send(msg)
     return render_template('verify.html')
 
 
-@app.route('/validate',methods=['POST'])
+@app.route('/validate', methods=['POST'])
 def validate():
-    user_otp=request.form['otp']
+    user_otp = request.form['otp']
     if otp == int(user_otp):
         return redirect("/index", code=302)
     else:
@@ -140,7 +140,7 @@ def form_edit_get(id):
 def form_update_post(id):
     cursor = mysql.get_db().cursor()
     inputData = (request.form.get('pname'), request.form.get('psex'), request.form.get('age'),
-                 request.form.get('height'), request.form.get('weight'),request.form.get('state'), id)
+                 request.form.get('height'), request.form.get('weight'), request.form.get('state'), id)
     sql_update_query = """UPDATE bioData t SET t.PatientName = %s, t.PatientSex = %s, t.Age = %s, t.Height =
     %s, t.Weight = %s, t.State = %s WHERE id = %s """
     cursor.execute(sql_update_query, inputData)
@@ -235,7 +235,5 @@ def api_delete(id) -> str:
     return resp
 
 
-
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', debug=True)

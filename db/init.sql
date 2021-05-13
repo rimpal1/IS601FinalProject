@@ -13,7 +13,7 @@ create table accounts
 		primary key (id)
 );
 INSERT INTO accounts (username, password, email) VALUES
-    ('yanyan','80762525', 'yyan80@gmail.com');
+    ('yanyan','yanyan8076', 'yyan80@gmail.com');
 
 CREATE TABLE IF NOT EXISTS bioData (
     `id` int AUTO_INCREMENT,
