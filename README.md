@@ -7,8 +7,8 @@ Integrates Chart.js's graphs with Login and Registration process to show Graphs 
 - **Rimpalbahen Suthar**: Create API endpoints and then consume those endpoints using a JavaScript chart. 
 
 ## Installation Instruction
--Step1: clone the app from the git repository.
--Step2: run "docker-compose up" command.
+- Step1: clone the app from the git repository.
+- Step2: run "docker-compose up" command.
 
 ### Login
 
