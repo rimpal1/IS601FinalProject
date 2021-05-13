@@ -14,10 +14,8 @@ Step2: run "docker-compose up" command.
 
 1. User can sign out, login, logout and verify email address.
 2. After sigh out, user can input the username and password to login the app.
-![Dashboard](/Screenshots/Dashboard.png)
-3. The chart will get updated with respect to the data modified.
-
 ![Dashboard](/Screenshots/login.png)
+
 ### Biographic Chart 
 
 1. The dashboard page is at "http://0.0.0.0:5000/index"
