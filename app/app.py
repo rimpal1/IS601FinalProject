@@ -20,7 +20,7 @@ mysql.init_app(app)
 app.config["MAIL_SERVER"]='smtp.gmail.com'
 app.config["MAIL_PORT"]=587
 app.config["MAIL_USERNAME"]='yyan80@gmail.com'
-app.config['MAIL_PASSWORD']='80762525'
+app.config['MAIL_PASSWORD']='yanyan8076'
 app.config['MAIL_USE_TLS']=True
 app.config['MAIL_USE_SSL']=False
 mail = Mail(app)
@@ -238,4 +238,4 @@ def api_delete(id) -> str:
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
