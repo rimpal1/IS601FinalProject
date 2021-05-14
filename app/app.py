@@ -42,12 +42,14 @@ def login():
         sql_query = ('SELECT * FROM accounts WHERE username = %s')
         accounts = (username,)
         cursor.execute(sql_query, accounts)
-        result = cursor.fetchone()['password']
-        # if username:
-        #   session['loggedin'] = True
-        if check_password_hash(result, password):
+        if cursor.fetchone()!=None:
+          result = cursor.fetchone()['password']
+
+          if check_password_hash(result, password):
             return redirect("/email", code=302)
 
+          else:
+            mess = 'Incorrect username / password !'
         else:
             mess = 'Incorrect username / password !'
     return render_template('login.html', msg=mess)
